@@ -1,10 +1,10 @@
 (function() {
   "use strict";
 
-  var ctx;
+  var canvas;
   var originX;
   var originY;
-  var canvas;
+  var ctx;
 
   var config = require('./blipconfig').config();
 
@@ -19,9 +19,11 @@
     originX = canvas.width/2;
     originY = canvas.height/2;
 
+    ctx = canvas.getContext('2d');
+    ctx.globalCompositeOperation = 'destination-over';
+
 
     window.requestAnimationFrame(draw);
-
   }
 
   function createCanvas() {
@@ -58,9 +60,6 @@
   };
 
   function draw() {
-    ctx = canvas.getContext('2d');
-
-    ctx.globalCompositeOperation = 'destination-over';
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save();
 
