@@ -20,5 +20,9 @@
   "bugs": {
     "url": "https://github.com/GitHug/blip-loader/issues"
   },
-  "homepage": "https://github.com/GitHug/blip-loader#readme"
+  "homepage": "https://github.com/GitHug/blip-loader#readme",
+  "dependencies": {
+    "domready": "^1.0.8",
+    "jquery": "^3.1.1"
+  }
 }
