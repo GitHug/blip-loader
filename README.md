@@ -1,2 +1,3 @@
 # blip-loader
-A blipety loader animation
+
+A small demo for the animation loader
