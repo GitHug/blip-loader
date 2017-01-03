@@ -1,21 +1,23 @@
 (function() {
   "use strict";
 
-  var canvas;
-  var originX;
+  var canvas; // The canvas to render in
+  var originX; // The origin of the circle
   var originY;
-  var ctx;
-  var numArcs = 20;
+  var ctx; // The context for the canvas
+  var numArcs = 20; // The number of arcs that the circle should contain
 
-  var counter = 1;
-  var ticksCount = 0;
-  var ticksPerCounter = 3;
-  var currentColor = 0;
+  var counter = 1; // Counter for animating the loader
+  var ticksCount = 0; // Counter for the number of ticks before a new animation should occur
+  var ticksPerCounter = 4; // The number of ticks before a new counter increment should occur
+  var currentColor = 0; // Index for the current color being used
 
   var config = require('./blipconfig').config();
 
+  /**
+   * Initailizes the loader
+   */
   exports.init = function() {
-
     canvas = createCanvas();
 
     if (!canvas) { //Canvas could not be created
@@ -28,10 +30,16 @@
     ctx = canvas.getContext('2d');
     ctx.globalCompositeOperation = 'destination-over';
 
-
     window.requestAnimationFrame(draw);
   }
 
+  /**
+   * Finds an element with id 'blipLoader'. If no such container exists then it
+   * is not possible to render the loader. Otherwise a canvas will be created in
+   * the container that will be used to render the loader.
+   *
+   * @return {HTMLElement} The created HTML canvas element
+   */
   function createCanvas() {
     //Bliploader container
     var container = document.getElementById('blipLoader')
@@ -55,6 +63,10 @@
     return createdCanvas;
   }
 
+  /**
+   * Draws the content in the canvas. Tasked with clearing the canvas and rotating
+   * the arcs to create animation.
+   */
   function draw() {
     updateCounter();
 
@@ -76,6 +88,9 @@
     window.requestAnimationFrame(draw);
   }
 
+  /**
+   * Draws the arcs that are used for loader animation
+   */
   function drawArcs() {
     var radius = Math.min(canvas.width/2, canvas.height/2);
     var outerMargin = radius*0.1;
@@ -90,6 +105,13 @@
     }
   };
 
+  /**
+   * Draws one arc in the circle
+   * @param {Number} outerRadius - The radius for the outer part of the circle.
+   * @param {Number} innerRadius - The radius for the inner part of the circle.
+   * @param {Number} arcDegree - Decides the position of the arc in the circle.
+   * @param {Number} i - Is used to decide in what iteration the arc is being drawn.
+   */
   function drawPath(outerRadius, innerRadius, arcDegree, i) {
     var startDegree = (Math.PI*1.5 - arcDegree/2);
 
@@ -110,6 +132,10 @@
     ctx.fill();
   };
 
+  /**
+   * Updates the animation counters and also manages the current color index
+   * as decided by the variable 'currentColor'
+   */
   function updateCounter() {
     ticksCount += 1;
     if (ticksCount > ticksPerCounter) {
