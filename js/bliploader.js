@@ -5,11 +5,12 @@
   var originX;
   var originY;
   var ctx;
-  var numArcs = 24;
+  var numArcs = 20;
 
   var counter = 1;
   var ticksCount = 0;
-  var ticksPerCounter = 4;
+  var ticksPerCounter = 3;
+  var currentColor = 0;
 
   var config = require('./blipconfig').config();
 
@@ -64,8 +65,8 @@
 
     ctx.translate(originX, originY);
     ctx.rotate(
-      ((2*Math.PI)/60) * time.getSeconds() +
-      ((2*Math.PI)/60000) * time.getMilliseconds()
+      ((2*Math.PI)/30) * time.getSeconds() +
+      ((2*Math.PI)/30000) * time.getMilliseconds()
     );
     ctx.translate(-originX, -originY);
 
@@ -78,30 +79,34 @@
   function drawArcs() {
     var radius = Math.min(canvas.width/2, canvas.height/2);
     var outerMargin = radius*0.1;
-    var innerMargin = radius*0.2;
+    var innerMargin = radius*0.3;
     var arcDegree = Math.PI/numArcs;
 
     var outerRadius = radius - outerMargin;
     var innerRadius = radius - innerMargin;
 
     for(var i = 1; i <= numArcs; i++) {
-      var active = i <= counter;
-      drawPath(outerRadius, innerRadius, arcDegree, active, i);
+      drawPath(outerRadius, innerRadius, arcDegree, i);
     }
   };
 
-  function drawPath(outerRadius, innerRadius, arcDegree, active, i) {
+  function drawPath(outerRadius, innerRadius, arcDegree, i) {
     var startDegree = (Math.PI*1.5 - arcDegree/2);
 
     var offset = arcDegree;
     var startAngle = startDegree + (arcDegree + offset) * i;
     var endAngle = startAngle + arcDegree;
 
+    var active = i <= counter;
+
+    var colorOn = config.colors[currentColor];
+    var colorOff = config.colors[(currentColor - 1).mod(config.colors.length)];
+
     ctx.beginPath();
     ctx.arc(originX, originY, outerRadius, startAngle, endAngle);
     ctx.arc(originX, originY, innerRadius, endAngle, startAngle, true);
     ctx.closePath();
-    ctx.fillStyle = active ? config.colorOn : config.colorOff;
+    ctx.fillStyle = active ? colorOn : colorOff;
     ctx.fill();
   };
 
@@ -112,6 +117,7 @@
       counter += 1;
       if (counter > numArcs) {
         counter = 1;
+        currentColor = (currentColor += 1) % config.colors.length;
       }
     }
   }
